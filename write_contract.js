@@ -26,13 +26,24 @@ const newContract = new ethers.Contract(
   getSigner()
 );
 
+const callDataIncrement = "0x5b34b966";
+
 console.log(
   "Counter number of newly created contract:",
   Number(await newContract.counter())
 );
 
-const tx2 = await newContract.incrementCounter();
-console.log("Wait for the tx to go through");
+// call the increment function directly
+// const tx2 = await newContract.incrementCounter();
+// console.log("Wait for the tx to go through", tx2.hash);
+
+// instead of calling the function on the contract just send a trx to the network, result should be the same
+
+const tx2 = await getSigner().sendTransaction({
+  to: deployedContractAddress,
+  data: callDataIncrement,
+});
+console.log("Wait for the tx to go through", tx2.hash);
 
 await tx2.wait();
 
